@@ -1,7 +1,18 @@
 import 'package:flutter/material.dart';
 
 class ConfessionCard extends StatelessWidget {
-  const ConfessionCard({super.key});
+  final String confession;
+  final String time;
+  final int likes;
+  final int comments;
+
+  const ConfessionCard({
+    super.key,
+    required this.confession,
+    required this.time,
+    required this.likes,
+    required this.comments,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -15,21 +26,14 @@ class ConfessionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-
-          /// HEADER
           Row(
             children: [
               const CircleAvatar(
                 radius: 22,
                 backgroundColor: Colors.deepPurple,
-                child: Icon(
-                  Icons.person,
-                  color: Colors.white,
-                ),
+                child: Icon(Icons.person, color: Colors.white),
               ),
-
               const SizedBox(width: 12),
-
               const Expanded(
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -39,92 +43,67 @@ class ConfessionCard extends StatelessWidget {
                       style: TextStyle(
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 16,
-                      ),
-                    ),
-
-                    Text(
-                      "2 hours ago",
-                      style: TextStyle(
-                        color: Colors.grey,
-                        fontSize: 12,
                       ),
                     ),
                   ],
                 ),
               ),
-
-              IconButton(
-                onPressed: () {},
-                icon: const Icon(
-                  Icons.more_vert,
-                  color: Colors.grey,
-                ),
+              Text(
+                time,
+                style: const TextStyle(color: Colors.grey),
               ),
             ],
           ),
 
           const SizedBox(height: 18),
 
-          /// CONFESSION
-          const Text(
-            "Today I finally confessed my feelings to my best friend. I was nervous all day, but I'm glad I finally had the courage to say it.",
-            style: TextStyle(
+          Text(
+            confession,
+            style: const TextStyle(
               color: Colors.white,
               fontSize: 16,
-              height: 1.6,
+              height: 1.5,
             ),
           ),
 
           const SizedBox(height: 20),
 
-          /// ACTIONS
           Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-
-              actionButton(
-                Icons.favorite_border,
-                "245",
+              Row(
+                children: [
+                  const Icon(Icons.favorite_border,
+                      color: Colors.grey, size: 20),
+                  const SizedBox(width: 5),
+                  Text("$likes",
+                      style: const TextStyle(color: Colors.grey)),
+                ],
               ),
-
-              actionButton(
-                Icons.chat_bubble_outline,
-                "32",
+              Row(
+                children: [
+                  const Icon(Icons.chat_bubble_outline,
+                      color: Colors.grey, size: 20),
+                  const SizedBox(width: 5),
+                  Text("$comments",
+                      style: const TextStyle(color: Colors.grey)),
+                ],
               ),
-
-              actionButton(
-                Icons.share_outlined,
-                "Share",
+              const Row(
+                children: [
+                  Icon(Icons.share_outlined,
+                      color: Colors.grey, size: 20),
+                  SizedBox(width: 5),
+                  Text(
+                    "Share",
+                    style: TextStyle(color: Colors.grey),
+                  ),
+                ],
               ),
             ],
           ),
         ],
       ),
-    );
-  }
-
-  Widget actionButton(
-      IconData icon,
-      String text,
-      ) {
-    return Row(
-      children: [
-        Icon(
-          icon,
-          size: 20,
-          color: Colors.grey,
-        ),
-
-        const SizedBox(width: 6),
-
-        Text(
-          text,
-          style: const TextStyle(
-            color: Colors.grey,
-          ),
-        ),
-      ],
     );
   }
 }
