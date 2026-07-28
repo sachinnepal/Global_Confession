@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "261729773208",
+    "project_id": "global-confession",
+    "storage_bucket": "global-confession.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:261729773208:android:26790af60927459a9052ed",
+        "android_client_info": {
+          "package_name": "com.cyrus.global_confession"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBNaUuKTdmJ71yHdGxW0RIyCWebP7dkfXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
