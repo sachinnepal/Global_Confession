@@ -10,6 +10,7 @@ import 'package:global_confession/core/widgets/search_bar_widget.dart';
 
 import 'package:global_confession/models/confession.dart';
 import 'package:global_confession/services/firestore_service.dart';
+import 'package:global_confession/screens/comments_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -88,9 +89,12 @@ class HomeScreen extends StatelessWidget {
                         },
 
                         onComment: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Comments coming soon!"),
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => CommentsScreen(
+                                confession: confession,
+                              ),
                             ),
                           );
                         },

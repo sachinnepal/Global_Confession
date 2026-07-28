@@ -10,7 +10,7 @@ class Confession {
   final int comments;
   final List<String> likedBy;
 
-  Confession({
+  const Confession({
     required this.id,
     required this.content,
     required this.category,
@@ -21,6 +21,7 @@ class Confession {
     required this.likedBy,
   });
 
+  /// Convert Confession object to Firestore Map
   Map<String, dynamic> toMap() {
     return {
       'content': content,
@@ -33,9 +34,10 @@ class Confession {
     };
   }
 
+  /// Create Confession object from Firestore document
   factory Confession.fromMap(
-      String id,
       Map<String, dynamic> map,
+      String id,
       ) {
     return Confession(
       id: id,
@@ -51,6 +53,7 @@ class Confession {
     );
   }
 
+  /// Copy object with updated values
   Confession copyWith({
     String? id,
     String? content,
@@ -75,6 +78,44 @@ class Confession {
 
   @override
   String toString() {
-    return 'Confession(id: $id, content: $content, category: $category, userId: $userId, createdAt: $createdAt, likes: $likes, comments: $comments, likedBy: $likedBy)';
+    return '''
+Confession(
+  id: $id,
+  content: $content,
+  category: $category,
+  userId: $userId,
+  createdAt: $createdAt,
+  likes: $likes,
+  comments: $comments,
+  likedBy: $likedBy,
+)
+''';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    if (identical(this, other)) return true;
+
+    return other is Confession &&
+        other.id == id &&
+        other.content == content &&
+        other.category == category &&
+        other.userId == userId &&
+        other.createdAt == createdAt &&
+        other.likes == likes &&
+        other.comments == comments &&
+        other.likedBy.toString() == likedBy.toString();
+  }
+
+  @override
+  int get hashCode {
+    return id.hashCode ^
+    content.hashCode ^
+    category.hashCode ^
+    userId.hashCode ^
+    createdAt.hashCode ^
+    likes.hashCode ^
+    comments.hashCode ^
+    likedBy.hashCode;
   }
 }
