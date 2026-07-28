@@ -6,12 +6,24 @@ class ConfessionCard extends StatelessWidget {
   final int likes;
   final int comments;
 
+  /// True if current user has liked this confession
+  final bool isLiked;
+
+  /// Button callbacks
+  final VoidCallback? onLike;
+  final VoidCallback? onComment;
+  final VoidCallback? onShare;
+
   const ConfessionCard({
     super.key,
     required this.confession,
     required this.time,
     required this.likes,
     required this.comments,
+    this.isLiked = false,
+    this.onLike,
+    this.onComment,
+    this.onShare,
   });
 
   @override
@@ -26,37 +38,42 @@ class ConfessionCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          /// Header
           Row(
             children: [
               const CircleAvatar(
                 radius: 22,
                 backgroundColor: Colors.deepPurple,
-                child: Icon(Icons.person, color: Colors.white),
-              ),
-              const SizedBox(width: 12),
-              const Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Anonymous",
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ],
+                child: Icon(
+                  Icons.person,
+                  color: Colors.white,
                 ),
               ),
+              const SizedBox(width: 12),
+
+              const Expanded(
+                child: Text(
+                  "Anonymous",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+
               Text(
                 time,
-                style: const TextStyle(color: Colors.grey),
+                style: const TextStyle(
+                  color: Colors.grey,
+                ),
               ),
             ],
           ),
 
           const SizedBox(height: 18),
 
+          /// Confession
           Text(
             confession,
             style: const TextStyle(
@@ -68,37 +85,87 @@ class ConfessionCard extends StatelessWidget {
 
           const SizedBox(height: 20),
 
+          /// Bottom Actions
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              Row(
-                children: [
-                  const Icon(Icons.favorite_border,
-                      color: Colors.grey, size: 20),
-                  const SizedBox(width: 5),
-                  Text("$likes",
-                      style: const TextStyle(color: Colors.grey)),
-                ],
-              ),
-              Row(
-                children: [
-                  const Icon(Icons.chat_bubble_outline,
-                      color: Colors.grey, size: 20),
-                  const SizedBox(width: 5),
-                  Text("$comments",
-                      style: const TextStyle(color: Colors.grey)),
-                ],
-              ),
-              const Row(
-                children: [
-                  Icon(Icons.share_outlined,
-                      color: Colors.grey, size: 20),
-                  SizedBox(width: 5),
-                  Text(
-                    "Share",
-                    style: TextStyle(color: Colors.grey),
+              InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: onLike,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        isLiked
+                            ? Icons.favorite
+                            : Icons.favorite_border,
+                        color: isLiked
+                            ? Colors.red
+                            : Colors.grey,
+                        size: 22,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "$likes",
+                        style: TextStyle(
+                          color: isLiked
+                              ? Colors.red
+                              : Colors.grey,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
+                ),
+              ),
+
+              InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: onComment,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      const Icon(
+                        Icons.chat_bubble_outline,
+                        color: Colors.grey,
+                        size: 22,
+                      ),
+                      const SizedBox(width: 6),
+                      Text(
+                        "$comments",
+                        style: const TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+
+              InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: onShare,
+                child: const Padding(
+                  padding: EdgeInsets.all(8),
+                  child: Row(
+                    children: [
+                      Icon(
+                        Icons.share_outlined,
+                        color: Colors.grey,
+                        size: 22,
+                      ),
+                      SizedBox(width: 6),
+                      Text(
+                        "Share",
+                        style: TextStyle(
+                          color: Colors.grey,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
               ),
             ],
           ),

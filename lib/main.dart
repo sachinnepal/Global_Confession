@@ -1,10 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:global_confession/app/naviagtion/main_navigation.dart';
 
-import 'app/naviagtion/main_navigation.dart';
-import 'core/theme/app_theme.dart';
-import 'package:global_confession/screens//home_screen.dart';
+import 'firebase_options.dart';
+import 'package:global_confession/services/auth_service.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+  await AuthService().signInAnonymously();
+
   runApp(const GlobalConfessionApp());
 }
 
@@ -16,8 +25,8 @@ class GlobalConfessionApp extends StatelessWidget {
     return MaterialApp(
       title: 'Global Confession',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
-      home: const  MainNavigation(),
+      theme: ThemeData.dark(),
+      home: const MainNavigation(),
     );
   }
 }
