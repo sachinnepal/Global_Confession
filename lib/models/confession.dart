@@ -8,7 +8,12 @@ class Confession {
   final DateTime createdAt;
   final int likes;
   final int comments;
+
+  /// Users who liked this confession
   final List<String> likedBy;
+
+  /// Users who bookmarked this confession
+  final List<String> savedBy;
 
   const Confession({
     required this.id,
@@ -19,9 +24,10 @@ class Confession {
     required this.likes,
     required this.comments,
     required this.likedBy,
+    required this.savedBy,
   });
 
-  /// Convert Confession object to Firestore Map
+  /// Convert object to Firestore map
   Map<String, dynamic> toMap() {
     return {
       'content': content,
@@ -31,10 +37,11 @@ class Confession {
       'likes': likes,
       'comments': comments,
       'likedBy': likedBy,
+      'savedBy': savedBy,
     };
   }
 
-  /// Create Confession object from Firestore document
+  /// Create object from Firestore document
   factory Confession.fromMap(
       Map<String, dynamic> map,
       String id,
@@ -50,10 +57,11 @@ class Confession {
       likes: map['likes'] ?? 0,
       comments: map['comments'] ?? 0,
       likedBy: List<String>.from(map['likedBy'] ?? []),
+      savedBy: List<String>.from(map['savedBy'] ?? []),
     );
   }
 
-  /// Copy object with updated values
+  /// Copy with new values
   Confession copyWith({
     String? id,
     String? content,
@@ -63,6 +71,7 @@ class Confession {
     int? likes,
     int? comments,
     List<String>? likedBy,
+    List<String>? savedBy,
   }) {
     return Confession(
       id: id ?? this.id,
@@ -73,6 +82,7 @@ class Confession {
       likes: likes ?? this.likes,
       comments: comments ?? this.comments,
       likedBy: likedBy ?? this.likedBy,
+      savedBy: savedBy ?? this.savedBy,
     );
   }
 
@@ -88,6 +98,7 @@ Confession(
   likes: $likes,
   comments: $comments,
   likedBy: $likedBy,
+  savedBy: $savedBy,
 )
 ''';
   }
@@ -104,7 +115,8 @@ Confession(
         other.createdAt == createdAt &&
         other.likes == likes &&
         other.comments == comments &&
-        other.likedBy.toString() == likedBy.toString();
+        other.likedBy.toString() == likedBy.toString() &&
+        other.savedBy.toString() == savedBy.toString();
   }
 
   @override
@@ -116,6 +128,7 @@ Confession(
     createdAt.hashCode ^
     likes.hashCode ^
     comments.hashCode ^
-    likedBy.hashCode;
+    likedBy.hashCode ^
+    savedBy.hashCode;
   }
 }

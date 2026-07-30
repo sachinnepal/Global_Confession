@@ -1,16 +1,16 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import 'package:global_confession/core/widgets/category_chips.dart';
-import 'package:global_confession/core/widgets/confession_card.dart';
-import 'package:global_confession/core/widgets/featured_confession.dart';
-import 'package:global_confession/core/widgets/greeting_header.dart';
-import 'package:global_confession/core/widgets/quick_access.dart';
-import 'package:global_confession/core/widgets/search_bar_widget.dart';
+import '../core/widgets/category_chips.dart';
+import '../core/widgets/confession_card.dart';
+import '../core/widgets/featured_confession.dart';
+import '../core/widgets/greeting_header.dart';
+import '../core/widgets/quick_access.dart';
+import '../core/widgets/search_bar_widget.dart';
 
-import 'package:global_confession/models/confession.dart';
-import 'package:global_confession/services/firestore_service.dart';
-import 'package:global_confession/screens/comments_screen.dart';
+import '../models/confession.dart';
+import '../screens/comments_screen.dart';
+import '../services/firestore_service.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -28,7 +28,8 @@ class HomeScreen extends StatelessWidget {
           child: StreamBuilder<List<Confession>>(
             stream: _firestoreService.getConfessions(),
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
+              if (snapshot.connectionState ==
+                  ConnectionState.waiting) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
@@ -50,7 +51,11 @@ class HomeScreen extends StatelessWidget {
 
                   const QuickAccess(),
 
+                  const SizedBox(height: 20),
+
                   const FeaturedConfession(),
+
+                  const SizedBox(height: 20),
 
                   const SearchBarWidget(),
 
@@ -67,7 +72,9 @@ class HomeScreen extends StatelessWidget {
                         child: Text(
                           "No confessions yet.\nBe the first one!",
                           textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
+                          style: TextStyle(
+                            color: Colors.grey,
+                          ),
                         ),
                       ),
                     ),
@@ -75,17 +82,32 @@ class HomeScreen extends StatelessWidget {
                   ...confessions.map(
                         (confession) {
                       final isLiked = currentUser != null &&
-                          confession.likedBy.contains(currentUser.uid);
+                          confession.likedBy.contains(
+                            currentUser.uid,
+                          );
+
+                      final isSaved = currentUser != null &&
+                          confession.savedBy.contains(
+                            currentUser.uid,
+                          );
 
                       return ConfessionCard(
                         confession: confession.content,
                         time: confession.createdAt.toString(),
                         likes: confession.likes,
                         comments: confession.comments,
+
                         isLiked: isLiked,
+                        isSaved: isSaved,
 
                         onLike: () async {
-                          await _firestoreService.toggleLike(confession);
+                          await _firestoreService
+                              .toggleLike(confession);
+                        },
+
+                        onBookmark: () async {
+                          await _firestoreService
+                              .toggleBookmark(confession);
                         },
 
                         onComment: () {
@@ -100,9 +122,12 @@ class HomeScreen extends StatelessWidget {
                         },
 
                         onShare: () {
-                          ScaffoldMessenger.of(context).showSnackBar(
+                          ScaffoldMessenger.of(context)
+                              .showSnackBar(
                             const SnackBar(
-                              content: Text("Share feature coming soon!"),
+                              content: Text(
+                                "Share feature coming soon!",
+                              ),
                             ),
                           );
                         },

@@ -7,7 +7,9 @@ import '../models/confession.dart';
 class FirestoreService {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  /// Add a new confession
+  /// ==========================
+  /// ADD CONFESSION
+  /// ==========================
   Future<void> addConfession({
     required String content,
     required String category,
@@ -23,11 +25,14 @@ class FirestoreService {
       'createdAt': Timestamp.now(),
       'likes': 0,
       'comments': 0,
-      'likedBy': [],
+      'likedBy': <String>[],
+      'savedBy': <String>[],
     });
   }
 
-  /// Get all confessions
+  /// ==========================
+  /// GET ALL CONFESSIONS
+  /// ==========================
   Stream<List<Confession>> getConfessions() {
     return _firestore
         .collection('confessions')
@@ -40,7 +45,9 @@ class FirestoreService {
     });
   }
 
-  /// Like / Unlike
+  /// ==========================
+  /// LIKE / UNLIKE
+  /// ==========================
   Future<void> toggleLike(Confession confession) async {
     final user = FirebaseAuth.instance.currentUser;
 
@@ -62,7 +69,53 @@ class FirestoreService {
     }
   }
 
-  /// Add Comment
+  /// ==========================
+  /// BOOKMARK / UNBOOKMARK
+  /// ==========================
+  Future<void> toggleBookmark(Confession confession) async {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) return;
+
+    final docRef =
+    _firestore.collection('confessions').doc(confession.id);
+
+    if (confession.savedBy.contains(user.uid)) {
+      await docRef.update({
+        'savedBy': FieldValue.arrayRemove([user.uid]),
+      });
+    } else {
+      await docRef.update({
+        'savedBy': FieldValue.arrayUnion([user.uid]),
+      });
+    }
+  }
+
+  /// ==========================
+  /// GET SAVED CONFESSIONS
+  /// ==========================
+  Stream<List<Confession>> getSavedConfessions() {
+    final user = FirebaseAuth.instance.currentUser;
+
+    if (user == null) {
+      return Stream.value([]);
+    }
+
+    return _firestore
+        .collection('confessions')
+        .where('savedBy', arrayContains: user.uid)
+        .orderBy('createdAt', descending: true)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs
+          .map((doc) => Confession.fromMap(doc.data(), doc.id))
+          .toList();
+    });
+  }
+
+  /// ==========================
+  /// ADD COMMENT
+  /// ==========================
   Future<void> addComment({
     required String confessionId,
     required String text,
@@ -85,7 +138,9 @@ class FirestoreService {
     });
   }
 
-  /// Get Comments
+  /// ==========================
+  /// GET COMMENTS
+  /// ==========================
   Stream<List<CommentModel>> getComments(String confessionId) {
     return _firestore
         .collection('confessions')

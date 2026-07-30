@@ -6,12 +6,18 @@ class ConfessionCard extends StatelessWidget {
   final int likes;
   final int comments;
 
-  /// True if current user has liked this confession
+  /// Like
   final bool isLiked;
-
-  /// Button callbacks
   final VoidCallback? onLike;
+
+  /// Bookmark
+  final bool isSaved;
+  final VoidCallback? onBookmark;
+
+  /// Comment
   final VoidCallback? onComment;
+
+  /// Share
   final VoidCallback? onShare;
 
   const ConfessionCard({
@@ -21,7 +27,9 @@ class ConfessionCard extends StatelessWidget {
     required this.likes,
     required this.comments,
     this.isLiked = false,
+    this.isSaved = false,
     this.onLike,
+    this.onBookmark,
     this.onComment,
     this.onShare,
   });
@@ -50,7 +58,6 @@ class ConfessionCard extends StatelessWidget {
                 ),
               ),
               const SizedBox(width: 12),
-
               const Expanded(
                 child: Text(
                   "Anonymous",
@@ -61,7 +68,6 @@ class ConfessionCard extends StatelessWidget {
                   ),
                 ),
               ),
-
               Text(
                 time,
                 style: const TextStyle(
@@ -73,7 +79,7 @@ class ConfessionCard extends StatelessWidget {
 
           const SizedBox(height: 18),
 
-          /// Confession
+          /// Confession Text
           Text(
             confession,
             style: const TextStyle(
@@ -89,6 +95,7 @@ class ConfessionCard extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
+              /// Like
               InkWell(
                 borderRadius: BorderRadius.circular(20),
                 onTap: onLike,
@@ -100,19 +107,15 @@ class ConfessionCard extends StatelessWidget {
                         isLiked
                             ? Icons.favorite
                             : Icons.favorite_border,
-                        color: isLiked
-                            ? Colors.red
-                            : Colors.grey,
-                        size: 22,
+                        color:
+                        isLiked ? Colors.red : Colors.grey,
                       ),
                       const SizedBox(width: 6),
                       Text(
                         "$likes",
                         style: TextStyle(
-                          color: isLiked
-                              ? Colors.red
-                              : Colors.grey,
-                          fontWeight: FontWeight.w600,
+                          color:
+                          isLiked ? Colors.red : Colors.grey,
                         ),
                       ),
                     ],
@@ -120,6 +123,7 @@ class ConfessionCard extends StatelessWidget {
                 ),
               ),
 
+              /// Comment
               InkWell(
                 borderRadius: BorderRadius.circular(20),
                 onTap: onComment,
@@ -130,7 +134,6 @@ class ConfessionCard extends StatelessWidget {
                       const Icon(
                         Icons.chat_bubble_outline,
                         color: Colors.grey,
-                        size: 22,
                       ),
                       const SizedBox(width: 6),
                       Text(
@@ -144,26 +147,32 @@ class ConfessionCard extends StatelessWidget {
                 ),
               ),
 
+              /// Bookmark
+              InkWell(
+                borderRadius: BorderRadius.circular(20),
+                onTap: onBookmark,
+                child: Padding(
+                  padding: const EdgeInsets.all(8),
+                  child: Icon(
+                    isSaved
+                        ? Icons.bookmark
+                        : Icons.bookmark_border,
+                    color: isSaved
+                        ? Colors.amber
+                        : Colors.grey,
+                  ),
+                ),
+              ),
+
+              /// Share
               InkWell(
                 borderRadius: BorderRadius.circular(20),
                 onTap: onShare,
                 child: const Padding(
                   padding: EdgeInsets.all(8),
-                  child: Row(
-                    children: [
-                      Icon(
-                        Icons.share_outlined,
-                        color: Colors.grey,
-                        size: 22,
-                      ),
-                      SizedBox(width: 6),
-                      Text(
-                        "Share",
-                        style: TextStyle(
-                          color: Colors.grey,
-                        ),
-                      ),
-                    ],
+                  child: Icon(
+                    Icons.share_outlined,
+                    color: Colors.grey,
                   ),
                 ),
               ),
