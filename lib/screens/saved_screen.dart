@@ -1,52 +1,101 @@
 import 'package:flutter/material.dart';
-import 'package:global_confession/core/widgets/confession_card.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
+import '../core/widgets/confession_card.dart';
+import '../models/confession.dart';
+import '../screens/comments_screen.dart';
+import '../services/firestore_service.dart';
 
 class SavedScreen extends StatelessWidget {
-  const SavedScreen({super.key});
+  SavedScreen({super.key});
+
+  final FirestoreService _firestoreService = FirestoreService();
 
   @override
   Widget build(BuildContext context) {
+    final currentUser = FirebaseAuth.instance.currentUser;
+
     return Scaffold(
       appBar: AppBar(
         title: const Text("Saved Confessions"),
-        centerTitle: true,
       ),
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: const [
-          Text(
-            "Your Favorites ❤️",
-            style: TextStyle(
-              fontSize: 26,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
+      body: StreamBuilder<List<Confession>>(
+        stream: _firestoreService.getSavedConfessions(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(
+              child: CircularProgressIndicator(),
+            );
+          }
 
-          SizedBox(height: 8),
+          if (snapshot.hasError) {
+            return Center(
+              child: Text(snapshot.error.toString()),
+            );
+          }
 
-          Text(
-            "Confessions you've saved will appear here.",
-            style: TextStyle(color: Colors.grey),
-          ),
+          final confessions = snapshot.data ?? [];
 
-          SizedBox(height: 25),
+          if (confessions.isEmpty) {
+            return const Center(
+              child: Text(
+                "No saved confessions yet.",
+                style: TextStyle(fontSize: 16),
+              ),
+            );
+          }
 
-          ConfessionCard(
-            confession:
-            "I still think about someone from years ago, even though we've both moved on.",
-            time: "1 day ago",
-            likes: 932,
-            comments: 84,
-          ),
+          return ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: confessions.length,
+            itemBuilder: (context, index) {
+              final confession = confessions[index];
 
-          ConfessionCard(
-            confession:
-            "Today I resigned from my job to finally chase the career I truly wanted.",
-            time: "3 days ago",
-            likes: 1542,
-            comments: 201,
-          ),
-        ],
+              final isLiked = currentUser != null &&
+                  confession.likedBy.contains(currentUser.uid);
+
+              final isSaved = currentUser != null &&
+                  confession.savedBy.contains(currentUser.uid);
+
+              return ConfessionCard(
+                confession: confession.content,
+                time: confession.createdAt.toString(),
+                likes: confession.likes,
+                comments: confession.comments,
+
+                isLiked: isLiked,
+                isSaved: isSaved,
+
+                onLike: () async {
+                  await _firestoreService.toggleLike(confession);
+                },
+
+                onBookmark: () async {
+                  await _firestoreService.toggleBookmark(confession);
+                },
+
+                onComment: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) => CommentsScreen(
+                        confession: confession,
+                      ),
+                    ),
+                  );
+                },
+
+                onShare: () {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text("Share feature coming soon!"),
+                    ),
+                  );
+                },
+              );
+            },
+          );
+        },
       ),
     );
   }
