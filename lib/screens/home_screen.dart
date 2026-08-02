@@ -93,7 +93,7 @@ class HomeScreen extends StatelessWidget {
 
                       return ConfessionCard(
                         confession: confession.content,
-                        time: confession.createdAt.toString(),
+                        time: confession.createdAt,
                         likes: confession.likes,
                         comments: confession.comments,
 

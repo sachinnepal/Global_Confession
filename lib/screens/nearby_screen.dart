@@ -13,8 +13,8 @@ class NearbyScreen extends StatelessWidget {
       ),
       body: ListView(
         padding: const EdgeInsets.all(20),
-        children: const [
-          Text(
+        children: [
+          const Text(
             "📍 Nearby Confessions",
             style: TextStyle(
               fontSize: 28,
@@ -22,39 +22,39 @@ class NearbyScreen extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 8),
+          const SizedBox(height: 8),
 
-          Text(
+          const Text(
             "Discover anonymous confessions from people around you.",
             style: TextStyle(
               color: Colors.grey,
             ),
           ),
 
-          SizedBox(height: 25),
+          const SizedBox(height: 25),
 
-          LocationCard(
+          const LocationCard(
             city: "Barrie",
             posts: "24",
           ),
 
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
 
-          LocationCard(
+          const LocationCard(
             city: "Toronto",
             posts: "102",
           ),
 
-          SizedBox(height: 15),
+          const SizedBox(height: 15),
 
-          LocationCard(
+          const LocationCard(
             city: "Mississauga",
             posts: "56",
           ),
 
-          SizedBox(height: 35),
+          const SizedBox(height: 35),
 
-          Text(
+          const Text(
             "Trending Nearby",
             style: TextStyle(
               fontSize: 22,
@@ -62,12 +62,14 @@ class NearbyScreen extends StatelessWidget {
             ),
           ),
 
-          SizedBox(height: 20),
+          const SizedBox(height: 20),
 
           ConfessionCard(
             confession:
             "I accidentally confessed to my crush today... and they smiled.",
-            time: "45 min ago",
+            time: DateTime.now().subtract(
+              const Duration(minutes: 45),
+            ),
             likes: 234,
             comments: 28,
           ),
@@ -75,7 +77,9 @@ class NearbyScreen extends StatelessWidget {
           ConfessionCard(
             confession:
             "Sometimes I drive around the city just to clear my mind.",
-            time: "2 hours ago",
+            time: DateTime.now().subtract(
+              const Duration(hours: 2),
+            ),
             likes: 512,
             comments: 61,
           ),
@@ -109,7 +113,7 @@ class LocationCard extends StatelessWidget {
             width: 55,
             height: 55,
             decoration: BoxDecoration(
-              color: Colors.deepPurple.withOpacity(0.15),
+              color: Colors.deepPurple.withValues(alpha: 0.15),
               borderRadius: BorderRadius.circular(16),
             ),
             child: const Icon(

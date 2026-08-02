@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:timeago/timeago.dart' as timeago;
 
 class ConfessionCard extends StatelessWidget {
   final String confession;
-  final String time;
+  final DateTime time;
   final int likes;
   final int comments;
 
@@ -69,11 +70,11 @@ class ConfessionCard extends StatelessWidget {
                 ),
               ),
               Text(
-                time,
+                timeago.format(time),
                 style: const TextStyle(
                   color: Colors.grey,
                 ),
-              ),
+              )
             ],
           ),
 
